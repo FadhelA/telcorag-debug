@@ -60,7 +60,7 @@ async def TelcoRAG(query, model_name='gpt-4o-mini', api_key= None):
 
                 
         print("**"*50)
-        print("Online stuff")
+        print("Online stuff ---")
         print(online_info)
         for online_parag in online_info:
             question.context.append(online_parag)

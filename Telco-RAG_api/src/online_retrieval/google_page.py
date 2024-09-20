@@ -7,6 +7,8 @@ from io import BytesIO
 from docx import Document
 from copy import deepcopy
 from src.validator import validator_online
+from fake_useragent import UserAgent
+
 
 async def fetch_page_text(url: str, session: httpx.AsyncClient) -> str:
     """Fetches the text content of a given URL, retrying twice if necessary."""
@@ -58,7 +60,7 @@ async def fetch_search_page(url: str, session: httpx.AsyncClient, headers: dict)
     try:
         response = await session.get(url, headers=headers, follow_redirects=True)
         response.raise_for_status()  # Raises an exception for 4XX/5XX responses
-        return response.text
+        return response.content # PUT BACK .text
     except Exception as e:
         print(f"Failed to fetch search page: {e}")
         return None
@@ -66,6 +68,7 @@ async def fetch_search_page(url: str, session: httpx.AsyncClient, headers: dict)
 async def extract_google_results(html_content: str, session: httpx.AsyncClient) -> list:
     """Extracts links and snippets from Google search results."""
     soup = BeautifulSoup(html_content, 'html.parser')
+    #print(soup.prettify()[:10])
     results = []
     for result in soup.find_all('div', class_='tF2Cxc'):
         title_element = result.find('h3')
@@ -121,8 +124,9 @@ async def _get_snippet(query: str, engine: str, session: httpx.AsyncClient):
     
     if engine == 'google':
         url = f"https://www.google.com/search?q={encoded_query}"
+        ua = UserAgent().random
         headers = {
-            "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:123.0) Gecko/20100101 Firefox/123.0",
+            "User-Agent": ua,#"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:123.0) Gecko/20100101 Firefox/123.0",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
             "Accept-Language": "en-GB,en;q=0.7,en-US;q=0.3",
             "Accept-Encoding": "gzip, deflate, br",
@@ -138,6 +142,8 @@ async def _get_snippet(query: str, engine: str, session: httpx.AsyncClient):
             "TE": "trailers",
         }
         html_content = await fetch_search_page(url, session, headers)
+        print("GOOGLE GET "*20) # DELETE
+        print(f"HTML content: {html_content[:30]}")
         if html_content:
             return await extract_google_results(html_content, session)
     
@@ -169,13 +175,15 @@ async def fetch_all_snippets(queries: list, question: str, model_name='gpt-4o-mi
     async with httpx.AsyncClient() as session:
         tasks = [get_snippet(query, engine, session) for query in queries for engine in engines]
         results = await asyncio.gather(*tasks)
-        
+        print("SNIPPETS GOOGLE "*20) # DELETE DEBUG
+        print(f"Results {results}")  
+
         combined_results = {}
         for i, query in enumerate(queries):
             combined_results[query] = []
             for j, engine in enumerate(engines):
                 combined_results[query].extend(results[i * len(engines) + j])
-                
+           
         if validator:
             snippet_list = [item['snippet'] for query, results in combined_results.items() for item in results]
             good_snippets = validator_online(question, snippet_list, model_name=model_name, UI_flag=UI)

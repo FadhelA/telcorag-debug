@@ -208,7 +208,7 @@ class Query:
     Answer options:
     {options}"""
         osintquery = await a_submit_prompt_flex_UI(querytoOSINT, model=model_name)
-        print("_"*100)
+        print("_FA"*100)
         print(osintquery)
         try:
             online_info = await fetch_snippets_and_search(query= osintquery.rstrip('"'), question=self.question, model_name=model_name, validator=validator_flag, UI=True)     

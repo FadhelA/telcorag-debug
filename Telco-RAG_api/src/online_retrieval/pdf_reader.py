@@ -68,7 +68,7 @@ async def fetch_snippets_and_search(query, question,model_name , validator, UI):
     snippets_full = await fetch_all_snippets([query], question, model_name, engines, validator, UI)
     # print(f'We retrieved {len(snippets_full[query])} snippets')
     # print('-'*100)
-
+    print(snippets_full)
     snippets_list = [snippet for snippet_list in snippets_full.values() for snippet in snippet_list]
     top_paragraphs = []
     with ThreadPoolExecutor() as executor:
