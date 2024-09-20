@@ -18,8 +18,12 @@ folder_url = "https://huggingface.co/datasets/netop/Embeddings3GPP-R18"
 clone_directory = "./3GPP-Release18"
 
 if not (os.path.exists(clone_directory) and "Embeddings" in os.listdir(clone_directory)):
-    print("Downloading 3GPP dataset for RAG")
+    print("Downloading 3GPP dataset for RAG...")
     git.Repo.clone_from(folder_url, clone_directory, progress=CloneProgress())
-    print("Folder cloned successfully!")
+    # Pull LFS files
+    print("Pulling LFS files...")
+    repo = git.Repo(clone_directory)
+    repo.git.lfs('pull')
+    print("LFS files pulled successfully!")
 else:
     print("Folder already exists. Skipping cloning.")

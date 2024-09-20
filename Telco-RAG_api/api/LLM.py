@@ -125,7 +125,14 @@ class RateLimiter:
             self.next_call_time = max(self.next_call_time + 1 / self.calls_per_second, now)
 
 
+def update_api_key():
+    openai.api_key = get_settings().openai_api_key
+    return
+
 def submit_prompt_flex_UI(prompt, model="gpt-4o-mini", output_json=False):
+    if openai.api_key == "":
+        update_api_key()
+
     if model in models_fullnames:
         model_fullname = models_fullnames[model]
         endpoint = models_endpoints[model]
@@ -225,6 +232,8 @@ def submit_prompt_flex_UI(prompt, model="gpt-4o-mini", output_json=False):
 
 
 async def a_submit_prompt_flex_UI(prompt, model="gpt-4o-mini", output_json=False):
+    if openai.api_key == "":
+        update_api_key()
     if model in models_fullnames:
         model_fullname = models_fullnames[model]
         endpoint = models_endpoints[model]

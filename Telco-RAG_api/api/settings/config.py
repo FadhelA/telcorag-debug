@@ -30,11 +30,11 @@ if not toml_files:
         toml.dump(default_settings_dict, file)
     toml_files.append(default_toml_path)
     
-global_settings = Dynaconf(
-    envvar_prefix=False,
-    merge_enabled=True,
-    settings_files=toml_files,
-)
 
 def get_settings():
+    global_settings = Dynaconf(
+        envvar_prefix=False,
+        merge_enabled=True,
+        settings_files=toml_files,
+    )
     return global_settings
