@@ -43,4 +43,4 @@ next-env.d.ts
 
 /Telco-RAG_api/3GPP-Release18/
 
-*__pycache__/
+*/__pycache__/
