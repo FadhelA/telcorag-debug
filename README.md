@@ -27,8 +27,9 @@ git clone https://github.com/netop-team/telco-rag.git
 cd <repository-directory>
 ```
 Prerequisites
-Python 3.11
-node.js
+- Python 3.11
+- node.js
+
 Other dependencies listed in requirements.txt
 
 Installation
