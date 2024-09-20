@@ -33,11 +33,12 @@ Prerequisites
 Other dependencies listed in requirements.txt
 
 Installation
-Install the necessary Python packages:
+Install the necessary Python packages and download the 3GPP knowledge database:
 
 ```bash
 cd .\Telco-RAG_api\
 pip install -r requirements.txt
+python setup.py
 ```
 
 Running the full pipeline
@@ -46,6 +47,11 @@ Running the full pipeline
 npm install
 npm run dev
 ```
+
+This command will open two terminals, one for the front end and one for the Telco-RAG back end. You can access the front end using your internet navigator at the address http://localhost:3000/
+
+During your first connection, make sure to specify a valid openai API key (in settings) 
+
 
 If you want only to run the API server, use the following command:
 
