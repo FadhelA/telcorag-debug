@@ -33,6 +33,7 @@ cd telco-rag
 
 - Python 3.11
 - Node.js
+- Git LFS
 
 Other dependencies are listed in `requirements.txt`.
 
