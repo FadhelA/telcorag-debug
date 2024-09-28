@@ -52,6 +52,7 @@ python setup.py
 To run the full pipeline, use the following commands:
 
 ```bash
+npm install concurrently
 npm install
 npm run dev
 ```
